@@ -1,5 +1,6 @@
 package com.example.booksapp.data
 
+import com.example.booksapp.model.Book
 import com.example.booksapp.network.BookService
 
 

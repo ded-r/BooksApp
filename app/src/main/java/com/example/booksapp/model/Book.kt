@@ -1,4 +1,4 @@
-package com.example.booksapp.data
+package com.example.booksapp.model
 
 data class Book(
     val title: String?,
