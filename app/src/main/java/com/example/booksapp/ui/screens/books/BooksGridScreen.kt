@@ -27,17 +27,22 @@ import coil.request.ImageRequest
 import com.example.booksapp.R
 import com.example.booksapp.model.Book
 import com.example.booksapp.ui.BooksAppScreen
+import kotlin.reflect.KFunction1
 
 @Composable
 fun BooksGridScreen(
     books: List<Book>,
+    onButtonClicked: () -> Unit,
+    setBookAction: KFunction1<Book, Unit>,
     modifier: Modifier,
-    onBookClicked: (Book) -> Unit,
 ) {
     LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), contentPadding = PaddingValues(4.dp)) {
         itemsIndexed(books) { _, book ->
             BookCard(
-                book = book, modifier, onBookClicked = onBookClicked
+                book = book,
+                onButtonClicked = onButtonClicked,
+                setBookAction = setBookAction,
+                modifier.padding(1.dp)
             )
         }
     }
@@ -46,15 +51,19 @@ fun BooksGridScreen(
 @Composable
 fun BookCard(
     book: Book,
-    modifier: Modifier,
-    onBookClicked: (Book) -> Unit
+    onButtonClicked: () -> Unit,
+    setBookAction: KFunction1<Book, Unit>,
+    modifier: Modifier
 ) {
     Card(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
             .requiredHeight(296.dp)
-            .clickable { onBookClicked(book) },
+            .clickable {
+                setBookAction.invoke(book)
+                onButtonClicked.invoke()
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -1,14 +1,10 @@
 package com.example.booksapp.ui
 
-import android.net.http.HttpException
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -16,8 +12,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.booksapp.BooksApplication
+import com.example.booksapp.data.BookUiState
 import com.example.booksapp.model.Book
 import com.example.booksapp.data.BooksRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -34,12 +35,23 @@ class BooksAppViewModel(
     var booksAppUiState: BooksAppUiState by mutableStateOf(BooksAppUiState.Loading)
         private set
 
+    private val _uiState = MutableStateFlow(BookUiState())
+    val uiState: StateFlow<BookUiState> = _uiState.asStateFlow()
+
     private val _searchWidgetState: MutableState<SearchWidgetState> =
         mutableStateOf(value = SearchWidgetState.CLOSED)
     val searchWidgetState: State<SearchWidgetState> = _searchWidgetState
 
     private val _searchTextState: MutableState<String> = mutableStateOf(value = "")
     val searchTextState: State<String> = _searchTextState
+
+    fun setBook(book: Book) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentBook = book,
+            )
+        }
+    }
 
     fun updateSearchWidgetState(newValue: SearchWidgetState) {
         _searchWidgetState.value = newValue
@@ -61,11 +73,10 @@ class BooksAppViewModel(
                 BooksAppUiState.Success(booksRepository.getBooks(query, maxResults))
             } catch (e: IOException) {
                 BooksAppUiState.Error
-            } catch (e: HttpException) {
-                BooksAppUiState.Error
             }
         }
     }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

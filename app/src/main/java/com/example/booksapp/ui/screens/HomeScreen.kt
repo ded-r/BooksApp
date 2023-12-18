@@ -7,12 +7,14 @@ import com.example.booksapp.ui.BooksAppUiState
 import com.example.booksapp.ui.screens.books.BooksGridScreen
 import com.example.booksapp.ui.screens.books.ErrorScreen
 import com.example.booksapp.ui.screens.books.LoadingScreen
+import kotlin.reflect.KFunction1
 
 @Composable
 fun HomeScreen(
     booksAppUiState: BooksAppUiState,
     retryAction: () -> Unit,
-    onBookClicked: (Book) -> Unit,
+    setBookAction: KFunction1<Book, Unit>,
+    onButtonClicked: () -> Unit,
     modifier: Modifier
 ) {
     when (booksAppUiState) {
@@ -20,8 +22,9 @@ fun HomeScreen(
         is BooksAppUiState.Error -> ErrorScreen(retryAction = retryAction, modifier)
         is BooksAppUiState.Success -> BooksGridScreen(
             books = booksAppUiState.bookSearch,
+            onButtonClicked = onButtonClicked,
+            setBookAction = setBookAction,
             modifier = modifier,
-            onBookClicked
         )
     }
 }

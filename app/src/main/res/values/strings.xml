@@ -4,7 +4,7 @@
     <string name="loading_failed">Loading failed</string>
     <string name="retry">Retry</string>
     <string name="content_description">Content Description</string>
-    <string name="search_title">"Search "</string>
+    <string name="categories_title">Categories</string>
     <string name="favorites_title">Favorites</string>
     <string name="details_title">Book details</string>
 </resources>

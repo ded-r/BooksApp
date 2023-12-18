@@ -16,13 +16,13 @@ data class BottomNavigationItem(
         return listOf(
             BottomNavigationItem(
                 label = "Browse",
-                icon = Icons.Filled.List,
+                icon = Icons.Filled.Home,
                 route = BooksAppScreen.Start.name
             ),
             BottomNavigationItem(
-                label = "Search",
-                icon = Icons.Filled.Search,
-                route = BooksAppScreen.Search.name
+                label = "Categories",
+                icon = Icons.Filled.List,
+                route = BooksAppScreen.Categories.name
             ),
             BottomNavigationItem(
                 label = "Favorites",
