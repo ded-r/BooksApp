@@ -1,8 +1,11 @@
 package com.example.booksapp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.content.ContextCompat
 import com.example.booksapp.ui.theme.BooksAppTheme
 import com.example.booksapp.ui.BooksApp
 
@@ -11,24 +14,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BooksAppTheme {
-                BooksApp()
+                BooksApp(onBookClicked = {
+                    ContextCompat.startActivity(
+                        this,
+                        Intent(Intent.ACTION_VIEW, Uri.parse(it.previewLink)),
+                        null
+                    )
+                })
             }
         }
     }
 }
-
-//@Composable
-//fun Greeting(name: String, modifier: Modifier = Modifier) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    BooksAppTheme {
-//        Greeting("Android")
-//    }
-//}

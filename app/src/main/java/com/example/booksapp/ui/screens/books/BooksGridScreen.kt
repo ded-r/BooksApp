@@ -31,12 +31,13 @@ import com.example.booksapp.ui.BooksAppScreen
 @Composable
 fun BooksGridScreen(
     books: List<Book>,
+    modifier: Modifier,
+    onBookClicked: (Book) -> Unit,
 ) {
     LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), contentPadding = PaddingValues(4.dp)) {
         itemsIndexed(books) { _, book ->
             BookCard(
-                book = book,
-                modifier = Modifier
+                book = book, modifier, onBookClicked = onBookClicked
             )
         }
     }
@@ -45,13 +46,15 @@ fun BooksGridScreen(
 @Composable
 fun BookCard(
     book: Book,
-    modifier: Modifier
+    modifier: Modifier,
+    onBookClicked: (Book) -> Unit
 ) {
     Card(
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .requiredHeight(296.dp),
+            .requiredHeight(296.dp)
+            .clickable { onBookClicked(book) },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

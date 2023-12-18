@@ -45,7 +45,8 @@ enum class BooksAppScreen(@StringRes val title: Int) {
 
 @Composable
 fun BooksApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookClicked: (Book) -> Unit
 ) {
 
     val booksAppViewModel: BooksAppViewModel = viewModel(factory = BooksAppViewModel.Factory)
@@ -112,6 +113,7 @@ fun BooksApp(
                 HomeScreen(
                     booksAppUiState = booksAppViewModel.booksAppUiState,
                     retryAction = { booksAppViewModel.getBooks() },
+                    onBookClicked,
                     modifier = modifier
                 )
             }
