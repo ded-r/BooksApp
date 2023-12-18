@@ -1,10 +1,11 @@
-package com.example.booksapp.ui.screens
+package com.example.booksapp.ui.screens.books
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -13,7 +14,9 @@ import com.example.booksapp.R
 
 @Composable
 fun LoadingScreen(modifier: Modifier) {
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         Image(
             modifier = Modifier.size(200.dp),
             painter = painterResource(id = R.drawable.loading_image),

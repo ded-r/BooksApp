@@ -3,8 +3,8 @@ package com.example.booksapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.booksapp.ui.BooksApp
 import com.example.booksapp.ui.theme.BooksAppTheme
+import com.example.booksapp.ui.BooksApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

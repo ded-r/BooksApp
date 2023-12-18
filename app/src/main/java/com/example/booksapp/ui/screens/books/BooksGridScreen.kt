@@ -1,5 +1,6 @@
-package com.example.booksapp.ui.screens
+package com.example.booksapp.ui.screens.books
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,33 +21,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.booksapp.R
 import com.example.booksapp.model.Book
+import com.example.booksapp.ui.BooksAppScreen
 
 @Composable
 fun BooksGridScreen(
     books: List<Book>,
-    modifier: Modifier
 ) {
     LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), contentPadding = PaddingValues(4.dp)) {
-        itemsIndexed(books) {_, book ->
-            BookCard(book = book)
+        itemsIndexed(books) { _, book ->
+            BookCard(
+                book = book,
+                modifier = Modifier
+            )
         }
     }
 }
 
 @Composable
 fun BookCard(
-    book: Book, modifier: Modifier = Modifier
+    book: Book,
+    modifier: Modifier
 ) {
     Card(
         modifier = modifier
-            .padding(4.dp)
+            .padding(8.dp)
             .fillMaxWidth()
             .requiredHeight(296.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             book.title?.let {
@@ -57,6 +63,7 @@ fun BookCard(
                 )
             }
             AsyncImage(
+                modifier = modifier.fillMaxWidth(),
                 model = ImageRequest.Builder(context = LocalContext.current)
                     .data(book.imageLink?.replace("http", "https")).crossfade(true).build(),
                 error = painterResource(id = R.drawable.ic_broken_image),

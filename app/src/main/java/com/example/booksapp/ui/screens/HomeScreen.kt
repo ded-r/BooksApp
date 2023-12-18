@@ -2,14 +2,15 @@ package com.example.booksapp.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import com.example.booksapp.ui.theme.BooksAppUiState
+import com.example.booksapp.ui.BooksAppUiState
+import com.example.booksapp.ui.screens.books.BooksGridScreen
+import com.example.booksapp.ui.screens.books.ErrorScreen
+import com.example.booksapp.ui.screens.books.LoadingScreen
 
 @Composable
 fun HomeScreen(
     booksAppUiState: BooksAppUiState,
     retryAction: () -> Unit,
-    navController: NavController,
     modifier: Modifier
 ) {
     when (booksAppUiState) {
@@ -17,7 +18,6 @@ fun HomeScreen(
         is BooksAppUiState.Error -> ErrorScreen(retryAction = retryAction, modifier)
         is BooksAppUiState.Success -> BooksGridScreen(
             books = booksAppUiState.bookSearch,
-            modifier = modifier
         )
     }
 }

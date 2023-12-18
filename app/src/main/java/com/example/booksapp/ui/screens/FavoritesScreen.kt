@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.example.booksapp.ui.theme.BooksAppTheme
 
 @Composable
-fun FavoritesScreen(navController: NavController) {
+fun FavoritesScreen() {
     BooksAppTheme {
         Surface(
             modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background

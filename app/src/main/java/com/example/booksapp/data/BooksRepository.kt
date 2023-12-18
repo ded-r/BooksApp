@@ -16,7 +16,10 @@ class NetworkBooksRepository(
         maxResults: Int
     ): List<Book> = bookService.bookSearch(query, maxResults).items.map { items ->
         Book(
+            id = items.id,
             title = items.volumeInfo?.title,
+            publisher = items.volumeInfo?.publisher,
+            description = items.volumeInfo?.description,
             previewLink = items.volumeInfo?.previewLink,
             imageLink = items.volumeInfo?.imageLinks?.thumbnail
         )
