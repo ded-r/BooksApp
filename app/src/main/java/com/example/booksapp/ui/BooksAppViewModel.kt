@@ -1,5 +1,6 @@
 package com.example.booksapp.ui
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -15,6 +16,7 @@ import com.example.booksapp.BooksApplication
 import com.example.booksapp.data.BookUiState
 import com.example.booksapp.model.Book
 import com.example.booksapp.data.BooksRepository
+import com.example.booksapp.data.FavoritesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +31,8 @@ sealed interface BooksAppUiState {
 }
 
 class BooksAppViewModel(
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    private val favoritesRepository: FavoritesRepository
 ) : ViewModel() {
 
     var booksAppUiState: BooksAppUiState by mutableStateOf(BooksAppUiState.Loading)
@@ -61,6 +64,28 @@ class BooksAppViewModel(
         _searchTextState.value = newValue
     }
 
+    //    fun isFavorite() = viewModelScope.launch {
+//        favoritesRepository.isFavoriteBook(bookId = _uiState.value.currentBook?.id.toString()).collect{
+//            _detailUiState.value = (_detailUiState.value as DetailUiState.Success).copy(isFavorite = it)
+//        }
+//    }
+    fun isFavorite(book: Book) = viewModelScope.launch {
+        favoritesRepository.isFavoriteBook(bookId = book.id.toString()).collect { isFavorite ->
+            _uiState.value = _uiState.value.copy(isFavorite = isFavorite)
+        }
+    }
+
+    fun insertBook(book: Book) {
+        viewModelScope.launch {
+            try {
+                favoritesRepository.insertBook(book.convertBookInfoToFavoriteEntity())
+            } catch (e: SQLiteConstraintException) {
+                favoritesRepository.deleteBook(book.convertBookInfoToFavoriteEntity())
+            }
+        }
+    }
+
+
     init {
         getBooks()
     }
@@ -83,7 +108,11 @@ class BooksAppViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as BooksApplication)
                 val booksRepository = application.container.booksRepository
-                BooksAppViewModel(booksRepository = booksRepository)
+                val favoritesRepository = application.container.favoritesRepository
+                BooksAppViewModel(
+                    booksRepository = booksRepository,
+                    favoritesRepository = favoritesRepository
+                )
             }
         }
     }

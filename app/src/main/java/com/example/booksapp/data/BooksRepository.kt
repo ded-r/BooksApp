@@ -1,9 +1,7 @@
 package com.example.booksapp.data
 
-import com.example.booksapp.BooksApp
 import com.example.booksapp.model.Book
 import com.example.booksapp.network.BookService
-
 
 interface BooksRepository {
     suspend fun getBooks(query: String, maxResults: Int): List<Book>

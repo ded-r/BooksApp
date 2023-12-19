@@ -21,12 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.booksapp.R
 import com.example.booksapp.model.Book
-import com.example.booksapp.ui.BooksAppScreen
 import kotlin.reflect.KFunction1
 
 @Composable
