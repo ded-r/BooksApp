@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.booksapp.BooksApplication
 import com.example.booksapp.data.FavoritesRepository
 import com.example.booksapp.data.local.entities.Favorite
-import com.example.booksapp.ui.screens.books.favorites.FavoritesUiState
+import com.example.booksapp.ui.screens.favorites.FavoritesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

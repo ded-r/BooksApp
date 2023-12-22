@@ -34,7 +34,10 @@ fun BooksGridScreen(
     setBookAction: KFunction1<Book, Unit>,
     modifier: Modifier,
 ) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(150.dp), contentPadding = PaddingValues(4.dp)) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(150.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) {
         itemsIndexed(books) { _, book ->
             BookCard(
                 book = book,
@@ -43,6 +46,7 @@ fun BooksGridScreen(
                 modifier.padding(1.dp)
             )
         }
+
     }
 }
 

@@ -15,7 +15,7 @@ data class BottomNavigationItem(
             BottomNavigationItem(
                 label = "Browse",
                 icon = Icons.Filled.Home,
-                route = BooksAppScreen.Start.name
+                route = BooksAppScreen.Home.name
             ),
             BottomNavigationItem(
                 label = "Favorites",

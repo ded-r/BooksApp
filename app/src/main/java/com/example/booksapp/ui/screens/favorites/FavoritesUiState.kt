@@ -1,4 +1,4 @@
-package com.example.booksapp.ui.screens.books.favorites
+package com.example.booksapp.ui.screens.favorites
 
 import com.example.booksapp.data.local.entities.Favorite
 

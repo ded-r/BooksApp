@@ -6,9 +6,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -48,6 +50,7 @@ class BooksAppViewModel(
     private val _searchTextState: MutableState<String> = mutableStateOf(value = "")
     val searchTextState: State<String> = _searchTextState
 
+
     fun setBook(book: Book) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -64,17 +67,6 @@ class BooksAppViewModel(
         _searchTextState.value = newValue
     }
 
-    //    fun isFavorite() = viewModelScope.launch {
-//        favoritesRepository.isFavoriteBook(bookId = _uiState.value.currentBook?.id.toString()).collect{
-//            _detailUiState.value = (_detailUiState.value as DetailUiState.Success).copy(isFavorite = it)
-//        }
-//    }
-    fun isFavorite(book: Book) = viewModelScope.launch {
-        favoritesRepository.isFavoriteBook(bookId = book.id.toString()).collect { isFavorite ->
-            _uiState.value = _uiState.value.copy(isFavorite = isFavorite)
-        }
-    }
-
     fun insertBook(book: Book) {
         viewModelScope.launch {
             try {
@@ -89,7 +81,6 @@ class BooksAppViewModel(
     init {
         getBooks()
     }
-
 
     fun getBooks(query: String = "books", maxResults: Int = 40) {
         viewModelScope.launch {

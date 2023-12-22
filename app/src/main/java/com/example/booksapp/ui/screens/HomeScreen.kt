@@ -2,6 +2,7 @@ package com.example.booksapp.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.example.booksapp.model.Book
 import com.example.booksapp.ui.BooksAppUiState
 import com.example.booksapp.ui.screens.books.BooksGridScreen
@@ -11,6 +12,7 @@ import kotlin.reflect.KFunction1
 
 @Composable
 fun HomeScreen(
+    navController: NavController,
     booksAppUiState: BooksAppUiState,
     retryAction: () -> Unit,
     setBookAction: KFunction1<Book, Unit>,

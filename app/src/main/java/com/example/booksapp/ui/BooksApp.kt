@@ -3,6 +3,7 @@ package com.example.booksapp.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -14,7 +15,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -24,19 +25,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.booksapp.R
-import com.example.booksapp.ui.screens.books.favorites.FavoritesScreen
+import com.example.booksapp.ui.screens.favorites.FavoritesScreen
 import com.example.booksapp.ui.screens.HomeScreen
-import com.example.booksapp.ui.screens.books.SearchAppBar
-import com.example.booksapp.ui.screens.books.details.DetailsScreen
+import com.example.booksapp.ui.screens.SearchAppBar
+import com.example.booksapp.ui.screens.details.DetailsScreen
 import com.example.booksapp.ui.utils.BooksAppContentType
 import com.example.bookshelfapp.ui.screens.favorites.FavoritesViewModel
 
 enum class BooksAppScreen(@StringRes val title: Int) {
-    Start(title = R.string.app_name),
+    Home(title = R.string.app_name),
     Favorites(title = R.string.favorites_title),
     Details(title = R.string.details_title)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksApp(
     modifier: Modifier = Modifier,
@@ -46,7 +48,7 @@ fun BooksApp(
     val booksAppViewModel: BooksAppViewModel = viewModel(factory = BooksAppViewModel.Factory)
     val favoritesViewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModel.Factory)
     var navigationSelectedItem by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     val navController = rememberNavController()
 
@@ -58,13 +60,14 @@ fun BooksApp(
 
     val contentType = when (windowSize) {
         WindowWidthSizeClass.Compact,
-        WindowWidthSizeClass.Medium -> BooksAppContentType.ListOnly
+        WindowWidthSizeClass.Medium -> BooksAppContentType.LIST_ONLY
 
-        WindowWidthSizeClass.Expanded -> BooksAppContentType.ListAndDetail
-        else -> BooksAppContentType.ListOnly
+        WindowWidthSizeClass.Expanded -> BooksAppContentType.LIST_AND_DETAIL
+        else -> BooksAppContentType.LIST_ONLY
     }
 
-    Scaffold(modifier = modifier, topBar = {
+    Scaffold(modifier = modifier, topBar =
+    {
         SearchAppBar(
             searchWidgetState = searchWidgetState.value,
             searchTextState = searchTextState.value,
@@ -77,46 +80,48 @@ fun BooksApp(
                 booksAppViewModel.updateSearchWidgetState(newValue = SearchWidgetState.OPENED)
             }
         )
-    }, bottomBar = {
-        NavigationBar(
-            containerColor = MaterialTheme.colorScheme.primary,
-        ) {
-            BottomNavigationItem().bottomNavigationItems()
-                .forEachIndexed { index, navigationItem ->
-                    NavigationBarItem(
-                        selected = index == navigationSelectedItem,
-                        colors = NavigationBarItemDefaults.colors(
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedTextColor = MaterialTheme.colorScheme.onPrimary,
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        label = {
-                            Text(navigationItem.label)
-                        }, icon = {
-                            Icon(
-                                navigationItem.icon, contentDescription = navigationItem.label
-                            )
-                        }, onClick = {
-                            navigationSelectedItem = index
-                            navController.navigate(navigationItem.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+    },
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.primary,
+            ) {
+                BottomNavigationItem().bottomNavigationItems()
+                    .forEachIndexed { index, navigationItem ->
+                        NavigationBarItem(
+                            selected = index == navigationSelectedItem,
+                            colors = NavigationBarItemDefaults.colors(
+                                unselectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                                unselectedTextColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.onPrimary
+                            ),
+                            label = {
+                                Text(navigationItem.label)
+                            }, icon = {
+                                Icon(
+                                    navigationItem.icon, contentDescription = navigationItem.label
+                                )
+                            }, onClick = {
+                                navigationSelectedItem = index
+                                navController.navigate(navigationItem.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        })
-                }
-        }
-    }) { paddingValues ->
+                            })
+                    }
+            }
+        }) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = BooksAppScreen.Start.name,
+            startDestination = BooksAppScreen.Home.name,
             modifier = Modifier.padding(paddingValues = paddingValues)
         ) {
-            composable(route = BooksAppScreen.Start.name) {
+            composable(route = BooksAppScreen.Home.name) {
                 HomeScreen(
+                    navController = navController,
                     booksAppUiState = booksAppViewModel.booksAppUiState,
                     retryAction = { booksAppViewModel.getBooks() },
                     onButtonClicked = { navController.navigate(BooksAppScreen.Details.name) },
@@ -126,15 +131,17 @@ fun BooksApp(
             }
             composable(route = BooksAppScreen.Favorites.name) {
                 FavoritesScreen(
+                    navController = navController,
                     onButtonClicked = { navController.navigate(BooksAppScreen.Details.name) },
-                    setBookAction = favoritesViewModel::setFavorite,
-                    )
+                    setBookAction = favoritesViewModel::setFavorite
+                )
             }
             composable(route = BooksAppScreen.Details.name) {
                 DetailsScreen(
                     book = uiState.currentBook,
                     bookUiState = uiState,
                     booksAppViewModel = booksAppViewModel,
+                    navigateUp = { navController.navigateUp() },
                     modifier = Modifier.fillMaxSize()
                 )
             }

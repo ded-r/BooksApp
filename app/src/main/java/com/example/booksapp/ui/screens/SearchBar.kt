@@ -1,4 +1,4 @@
-package com.example.booksapp.ui.screens.books
+package com.example.booksapp.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

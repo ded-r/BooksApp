@@ -1,9 +1,10 @@
-package com.example.booksapp.ui.screens.books.favorites
+package com.example.booksapp.ui.screens.favorites
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.booksapp.R
@@ -38,6 +40,7 @@ import kotlin.reflect.KFunction1
 
 @Composable
 fun FavoritesScreen(
+    navController: NavController,
     onButtonClicked: () -> Unit,
     setBookAction: KFunction1<Favorite, Unit>,
     favoritesViewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModel.Factory),
@@ -85,12 +88,23 @@ fun FavoritesListScreen(
                         },
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Absolute.SpaceBetween
+                    ) {
                         Text(
                             text = favoriteData.title,
                             textAlign = TextAlign.Center,
                             modifier = modifier.padding(top = 4.dp, bottom = 8.dp)
                         )
+                        if (showButtonDelete) {
+                            IconButton(onClick = { favoritesViewModel.deleteBook(favoriteData) }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Delete,
+                                    contentDescription = ""
+                                )
+                            }
+                        }
                     }
                     AsyncImage(
                         modifier = modifier.fillMaxWidth(),
@@ -105,14 +119,6 @@ fun FavoritesListScreen(
                         ),
                         contentScale = ContentScale.Crop
                     )
-                    if (showButtonDelete) {
-                        IconButton(onClick = { favoritesViewModel.deleteBook(favoriteData) }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = ""
-                            )
-                        }
-                    }
                 }
             })
     }
